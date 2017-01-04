@@ -1,6 +1,8 @@
+#the code below is data scrapping but not getting the wanted to data
+
+
 import requests
 from bs4 import BeautifulSoup
-
 #running this in the python shell as well
 
 #requesting the data from the given website
