@@ -1,6 +1,9 @@
 #link That will be web Scrapped
 #https://finance.yahoo.com/quote/TMUS?p=TMUS
-
+# This uses another logic to scrap data , data has been retrived perfectly
+# parsing and checking to see if the stock price is worth selling
+#issue : paring percentages 
+#
 import urllib
 import urllib.request
 import re
