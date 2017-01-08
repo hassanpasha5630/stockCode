@@ -1,10 +1,14 @@
+#code to get live data and store into excel depending on the hours of the stock market
 import re
 from bs4 import BeautifulSoup
 import urllib
 import urllib.request
 import csv
 import time
+import _sqlite3
+
 from datetime import datetime
+from collections import OrderedDict
 
 
 URL1 = "https://finance.yahoo.com/quote/tmus?ltr=1"
@@ -16,9 +20,11 @@ Links =[URL1,URL2,URL3,URL4]
 Data = []
 TypeCast = []
 
+
+
 while True:
     now = datetime.now().strftime('%H%M')
-    if '0830' <= now <= '0300' or '0830' <= now <= '1500' or '0200' <= now <= '0300' :
+    if '0830' <= now <= '0300' or '0830' <= now <= '1500' or '0200' <= now <= '0400' :
         for stocks in Links :
 
 
@@ -28,44 +34,68 @@ while True:
                 Stock_Name = soup.find("h1", attrs= {"class":"D(ib) Fz(18px)"}).text.strip()
                 print(Stock_Name)
 
+
             except:
                 Stock_Name = soup.find('div', {"class": "D(ib)"}).find('h1').text.strip()
                 print(Stock_Name)
+
           #      print("        ")
             try:
                 Stock_Price = soup.find("span", attrs={"class":"Fw(b) Fz(36px) Mb(-4px)"}).text.strip()
                 print(Stock_Price)
                 typecasting = float(Stock_Price)
                 TypeCast.append(typecasting)
+
            #     print("        ")
             except:
                 Stock_Price = soup.find('div',{"class":"D(ib) Fw(200) Mend(20px)"}).find('span',{"class": " Fw(b) Fz(36px) Mb(-4px)"}).text
                 print(Stock_Price)
                 typecasting = float(Stock_Price)
                 TypeCast.append(typecasting)
+
             #    print("        ")
             try :
                 Percentage = soup.find("span", attrs={"class":"Fw(500) Pstart(10px) Fz(24px) C($dataRed)"}).text.strip()
                 print(Percentage)
                 print("Red")
+                Data.append((Stock_Name, Stock_Price, Percentage))
+
+
              #   print("        ")
             except:
                 Percentage =soup.find("span", attrs={"class":"Fw(500) Pstart(10px) Fz(24px) C($dataGreen)"}).text.strip()
                 print(Percentage)
                 print("Green")
-              #  print("        ")
+                Data.append((Stock_Name, Stock_Price, Percentage))
 
-            Data.append((Stock_Name, Stock_Price ,Percentage))
-            with open('MyStock.csv', 'a') as csv_file:
+
+
+            with open('MyStock10.csv', 'a') as csv_file:
+
+
+
+
+
                 write = csv.writer(csv_file)
-                for Stock_Name, Stock_Price , Percentage in Data:
-                    time2 = datetime.now()
-                    write.writerow([Stock_Name, Stock_Price,Percentage, datetime.strftime(time2,"%H%M%S")])
+                for Stock_Name, Stock_Price, Percentage in Data:
+                    # time2 = datetime.now()
+                    list(OrderedDict.fromkeys(Data))
+
+                    write.writerow([Stock_Name, Stock_Price, Percentage, datetime.now().strftime("%H:%M:%S")])
+
+
+                    #  print("        ")
+
+
     else:
         print("Market is closed")
         break
 
-   # typecating = int(Stock_Price)
+
+
+
+
+    # typecating = int(Stock_Price)
    #TypeCast.append(typecating)
     print("          ")
     print("For Hassan")
@@ -97,5 +127,6 @@ while True:
         print("AMDA stock is going down",TypeCast[3])
         print("        ")
 
-    print("sleeping for 30 sec")
-    time.sleep(30)
+    print("sleeping for 5 sec")
+    time.sleep(120)
+    
